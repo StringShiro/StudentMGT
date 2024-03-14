@@ -13,7 +13,21 @@
         @error('password')
             <span style="color: red">{{$message}}</span>
         @enderror
-        <hr>
         <button type="submit">Login</button>
+        <hr>
+        @foreach($allData as $ad)
+            <table>
+                <tr>
+                    <td>Name</td>
+                    <td>Email</td>
+                    <td>Password</td>
+                </tr>
+                <tr>
+                    <td>{{$ad->name}}</td>
+                    <td>{{$ad->email}}</td>
+                    <td>{{$ad->password}}</td>
+                </tr>
+            </table>
+        @endforeach
     </form>
 </div>

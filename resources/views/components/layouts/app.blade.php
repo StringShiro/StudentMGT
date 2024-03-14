@@ -6,6 +6,15 @@
 
         <title>{{ $title ?? 'Page Title' }}</title>
         @livewireStyles
+        <style>
+            table{
+                border-collapse: collapse;
+                width: 100%;
+            }
+            td,th{
+                border-bottom: 0.5px solid grey;
+            }
+        </style>
     </head>
     <body>
         {{ $slot }}

@@ -9,5 +9,5 @@ class StudentProfile extends Model
 {
     use HasFactory;
     protected $table = "student";
-    protected $fillable = ['studentname','studentnumber','studentaddress','studentemail','studentphone','studentmajor'] ;
+    protected $fillable = ['studentname','studentnumber','studentaddress','studentemail','studentphone','studentmajor','studentavatar'] ;
 }

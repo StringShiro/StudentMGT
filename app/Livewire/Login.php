@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\User;
 use Livewire\Component;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,7 @@ class Login extends Component
 {
     public $email;
     public $password;
+    public $allData = [];
     // protected $rules = [
     //     'username' => 'required|min:3|max:30',
     //     'password' => 'required'
@@ -36,6 +38,7 @@ class Login extends Component
     }
     public function render()
     {
+        $this->allData = User::all();
         return view('livewire.login');
     }
 }
