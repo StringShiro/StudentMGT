@@ -32,10 +32,10 @@
                     <td>{{$ad->studentmajor}}</td>
                     <td>{{$ad->studentavatar}}</td>
                     <td>
-                        <a href="javascript::void(0)" wire:click="editForm({{$ad->studentid}})">Edit</a>
-                        <a href="javascript::void(0)" wire:click="deletesForm({{$ad->id}})">Delete</a>
+                        <a href="" wire:click="editForm({{$ad->studentid}}")>Edit</a>
+                        <a href="javascript::void(0)" wire:click="deleteForm({{$ad->studentid}})">Delete</a>
                     </td>
-                </tr>]
+                </tr>
             @endforeach
         </table>
     </form>

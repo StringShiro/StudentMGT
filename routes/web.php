@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\DashBoard;
+use App\Livewire\EditProfile;
 use App\Livewire\FileUpload;
 use App\Livewire\Forms;
 use App\Livewire\Login;
@@ -26,3 +27,4 @@ route::get('/login', Login::class);
 route::get('/register', Register::class);
 route::get('/dashboard', DashBoard::class);
 route::get('/fileupload', FileUpload::class);
+route::get('/dashboard/edit-profile', EditProfile::class);
