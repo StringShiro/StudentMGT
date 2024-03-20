@@ -25,17 +25,6 @@ class Register extends Component
     public $studentavatar;
 
     public function storeUser(Request $request){
-        // $validated = $this->validate([
-        //     "name"=> 'required|max:100',
-        //     'email'=> 'required|email|max:255',
-        //     'password'=> 'required'
-        // ]);
-        // $user = User::create([
-        //     'name'=> $this->name,
-        //     'email'=> $this->email,
-        //     'password'=> bcrypt($this->password)
-        // ]);
-        // Auth::login($user);
         $validated = $this->validate([
             'studentname' => 'required',
             'studentnumber' => 'required',

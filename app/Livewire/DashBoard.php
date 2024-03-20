@@ -5,6 +5,8 @@ namespace App\Livewire;
 use App\Models\StudentProfile;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Rule;
 
 class DashBoard extends Component
 {
@@ -16,7 +18,9 @@ class DashBoard extends Component
     public $studentphone;
     public $studentmajor;
     public $studentavatar;
-    public $isEdit = false;
+    public $isUpdate = false;
+    public $editform = true;
+    public $student;
     public $allData = [];
 
     public function submit($studentid){
@@ -93,8 +97,10 @@ class DashBoard extends Component
         return $this->redirect('/dashboard', navigate:true);
     }
 
-    public function updateForm(){
-        return view('livewire.edit-profile');
+    #[On('edit-mode')]
+    public function edit($studentid){
+        dd($studentid);
+        $this->editform=true;
     }
     public function render()
     {

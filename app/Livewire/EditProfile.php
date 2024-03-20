@@ -4,7 +4,12 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\StudentProfile;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Rule;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Request;
 
 class EditProfile extends Component
 {
@@ -17,53 +22,84 @@ class EditProfile extends Component
     public $studentphone;
     public $studentmajor;
     public $studentavatar;
-    public function updateProfile (StudentProfile $studentid){
-        $student = StudentProfile::find($studentid);
-        $student->studentname = $this->studentname;
-        $student->studentnumber = $this->studentnumber;
-        $student->studentaddress = $this->studentaddress;
-        $student->studentemail = $this->studentemail;
-        $student->studentphone = $this->studentphone;
-        $student->studentmajor = $this->studentmajor;
-        $student->studentavatar = $this->studentavatar;
-        if(!$studentid){
-            $student->save();
-            session()->flash('success', 'student profile is updated!');
-        }else{
-            session()->flash('fail', 'Try again!');
-        }
-        // $validated =$this->validate([
-        //     'studentname' => 'required|max:255',
-        //     'studentnumber' => 'required|max:255',
-        //     'studentaddress' => 'required|max:255',
-        //     'studentemail' => 'required|email|max:255',
-        //     'studentphone' => 'required|max:10',
-        //     'studentmajor' => 'required|max:50',
-        //     'studentavatar' => 'required|mimes:aac,ai,aiff,avi,bmp,c,cpp,csv,dat,dmg,doc,dotx,dwg,dxf,eps,exe,glv,gif,h,hpp,ics,iso,java,mp4,mid,mp4,txt,xlx,xls,pdf,jpg,png,php,css,html,js|max:1024',
-        // ]);
-        // $this->student->update($validated);
+    public $isUpdate = false;
+    public $editform = false;
+    public $student;
+    public $allData = [];
 
-        // $singData = StudentProfile::find($studentid);
-        // $this->studentname = $singData->studentname;
-        // $this->studentnumber = $singData->studentnumber;
-        // $this->studentaddress = $singData->studentaddress;
-        // $this->studentemail = $singData->studentemail;
-        // $this->studentphone = $singData->studentphone;
-        // $this->studentmajor = $singData->studentmajor;
-        // $this->studentavatar = $singData->studentavatar;
-        // if(!$singData){
-        //     StudentProfile::updated([
-        //         'studentname' => $this->studentname,
-        //         'studentnumber' => $this->studentnumber,
-        //         'studentaddress' => $this->studentaddress,
-        //         'studentemail' => $this->studentemail,
-        //         'studentphone' => $this->studentphone,
-        //         'studentmajor' => $this->studentmajor,
-        //         'studentavatar' => $this->studentavatar
-        //     ]);
-        // }
-        // session()->flash('success', 'student profile is updated!');
+    public function submit(){
+
         return $this->redirect('/dashboard', navigate:true);
+    }
+    public function mount(){
+        $this->student = StudentProfile::all();
+    }
+    public function storeUser(Request $request){
+        $validated = $this->validate([
+            'studentname' => 'required',
+            'studentnumber' => 'required',
+            'studentaddress' => 'max:255',
+            'studentemail'=> 'email|max:255',
+            'studentphone' => 'max:10',
+            'studentmajor' => 'required',
+            'studentavatar'=> 'required|mimes:aac,ai,aiff,avi,bmp,c,cpp,csv,dat,dmg,doc,dotx,dwg,dxf,eps,exe,glv,gif,h,hpp,ics,iso,java,mp4,mid,mp4,txt,xlx,xls,pdf,jpg,png,php,css,html,js|max:1024',
+        ]);
+        $student = StudentProfile::create([
+            'studentname'=> $this->studentname,
+            'studentnumber'=> $this->studentnumber,
+            'studentaddress'=> $this->studentaddress,
+            'studentemail'=> $this->studentemail,
+            'studentphone'=> $this->studentphone,
+            'studentmajor'=> $this->studentmajor,
+            'studentavatar'=> $this->studentavatar
+        ]);
+        //Auth::login($student);
+        session()->flash('success','student is created!');
+        return $this->redirect('/dashboard');
+    }
+    public function edit (StudentProfile $studentid){
+        $data = StudentProfile::find($studentid);
+        $this->studentname = $data->studentname;
+        $this->studentnumber = $data->studentnumber;
+        $this->studentemail = $data->studentemail;
+        $this->studentphone = $data->studentphone;
+        $this->studentmajor = $data->studentmajor;
+        $this->studentavatar = $data->studentavatar;
+        $this->isUpdate = true;
+        $this->studentid = $studentid;
+    }
+    public function updateProfile (StudentProfile $studentid){
+         $validated = $this->validate([
+            'studentname' => 'required',
+            'studentnumber' => 'required',
+            'studentaddress' => 'max:255',
+            'studentemail'=> 'email|max:255',
+            'studentphone' => 'max:10',
+            'studentmajor' => 'required',
+            'studentavatar'=> 'required|mimes:aac,ai,aiff,avi,bmp,c,cpp,csv,dat,dmg,doc,dotx,dwg,dxf,eps,exe,glv,gif,h,hpp,ics,iso,java,mp4,mid,mp4,txt,xlx,xls,pdf,jpg,png,php,css,html,js|max:1024',
+        ]);
+        // $student = StudentProfile::create([
+        //     'studentname'=> $this->studentname,
+        //     'studentnumber'=> $this->studentnumber,
+        //     'studentaddress'=> $this->studentaddress,
+        //     'studentemail'=> $this->studentemail,
+        //     'studentphone'=> $this->studentphone,
+        //     'studentmajor'=> $this->studentmajor,
+        //     'studentavatar'=> $this->studentavatar
+        // ]);
+        $validated = $this->validate($validated);
+        $data = StudentProfile::find($this->studentid);
+        $data->update($validated);
+        session()->flash('success','profile is updated!');
+        return $this->redirect('/dashboard');
+    }
+    public function close(){
+        $this->reset();
+    }
+    #[On('edit-mode')]
+    public function editForm($studentid){
+        dd($studentid);
+        $this->editform=true;
     }
 
     public function render()

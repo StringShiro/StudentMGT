@@ -3,7 +3,7 @@ hoàn thiện UPDATE function
 chưa đọc được avatar
 chưa binding data từ bảng major sang profile
 chưa có search, filter
-chưa đi lại giao diện
+chua xong Modal de edit trong dashboard
 
 Làm được:
 login

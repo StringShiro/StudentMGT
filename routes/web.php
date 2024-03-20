@@ -24,7 +24,7 @@ Route::get('/', function () {
 });
 route::get('/forms', Forms::class);
 route::get('/login', Login::class);
-route::get('/register', Register::class);
 route::get('/dashboard', DashBoard::class);
 route::get('/fileupload', FileUpload::class);
+route::get('/dashboard/register', EditProfile::class);
 route::get('/dashboard/edit-profile', EditProfile::class);

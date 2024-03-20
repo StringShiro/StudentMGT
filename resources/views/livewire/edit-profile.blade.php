@@ -1,5 +1,5 @@
 <div>
-    <form wire:submit.prevent="updateProfile">
+    <form wire:submit.prevent="edit">
         @if(session()->has('success'))
             <div style="color: green">{{session('success')}}</div>
         @endif
@@ -26,6 +26,13 @@
         File upload: <br>
         <input type="file" accept="image/*" wire:model="studentavatar"><br>
         <hr>
-        <button type="submit">Save</button>
+        @if($isUpdate == false)
+            <button wire:click="storeUser()" type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">CREATE</button>
+        @else
+            <button wire:click="updateProfile()" type="submit" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">UPDATE</button>
+        @endif
+        <a href="/dashboard">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">BACK</button></a>
+
     </form>
 </div>

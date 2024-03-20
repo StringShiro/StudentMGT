@@ -1,15 +1,11 @@
 <div>
-    DashBoard
+    <h1>DashBoard</h1>
     <hr>
+    <a href="/dashboard/register" wire:click="addForm()">
+        <button type="button" class="btn btn-success">ADD</button>
+    </a>
     <form>
-    <button>Create</button>
-    <button>Edit</button>
-    <button>Delete</button>
-    <button>Update</button>
-    <hr>
         @foreach($allData as $ad)
-        <br>
-        <a href="javascript::void(0)" wire:click="addForm({{$ad->studentid}})">Add</a>
         <table>            
             <tr>
                 <th>Student ID</th>
@@ -22,21 +18,50 @@
                 <th>Student avatar</th>
                 <th>Actions<th>
             </tr>
-                <tr>
-                    <td>{{$ad->studentid}}</td>
-                    <td>{{$ad->studentname}}</td>
-                    <td>{{$ad->studentnumber}}</td>
-                    <td>{{$ad->studentaddress}}</td>
-                    <td>{{$ad->studentemail}}</td>
-                    <td>{{$ad->studentphone}}</td>
-                    <td>{{$ad->studentmajor}}</td>
-                    <td>{{$ad->studentavatar}}</td>
-                    <td>
-                        <a href="" wire:click="editForm({{$ad->studentid}}")>Edit</a>
-                        <a href="javascript::void(0)" wire:click="deleteForm({{$ad->studentid}})">Delete</a>
-                    </td>
-                </tr>
-            @endforeach
+            <tr>
+                <td>{{$ad->studentid}}</td>
+                <td>{{$ad->studentname}}</td>
+                <td>{{$ad->studentnumber}}</td>
+                <td>{{$ad->studentaddress}}</td>
+                <td>{{$ad->studentemail}}</td>
+                <td>{{$ad->studentphone}}</td>
+                <td>{{$ad->studentmajor}}</td>
+                <td>{{$ad->studentavatar}}</td>
+                <td>
+                    <a href="" wire:click="">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</button>
+                    </a>
+                    <a href="javascript::void(0)" wire:click="deleteForm({{$ad->studentid}})">
+                        <button type="button" class="btn btn-danger">DELETE</button>
+                    </a>
+                </td>
+            </tr>
         </table>
+                <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" class="form-control" placeholder="Username" aria-label="Username">
+                            <input type="text" class="form-control" placeholder="Username" aria-label="Username">
+                        </div>
+                        <div class="modal-footer">
+                            @if($editform)
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Update</button>
+                            @else
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save</button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
     </form>
 </div>
