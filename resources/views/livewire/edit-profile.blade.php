@@ -1,5 +1,5 @@
 <div>
-    <form wire:submit.prevent="edit">
+    <form wire:submit.prevent="storeUser">
         @if(session()->has('success'))
             <div style="color: green">{{session('success')}}</div>
         @endif

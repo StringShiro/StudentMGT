@@ -7,25 +7,32 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
+use Livewire\WithFileUploads;
 
 class DashBoard extends Component
 {
-    public $studentid;
-    public $studentname;
-    public $studentnumber;
-    public $studentaddress;
-    public $studentemail;
-    public $studentphone;
-    public $studentmajor;
-    public $studentavatar;
+
+    use WithFileUploads;
+    public $studentid, $studentname, $studentnumber, $studentaddress, $studentemail, $studentphone, $studentmajor, $studentavatar;
     public $isUpdate = false;
     public $editform = true;
-    public $student;
     public $allData = [];
+
+    protected function rules(){
+        return [
+            'studentname' => 'required',
+            'studentnumber' => 'required',
+            'studentaddress' => 'max:255',
+            'studentemail'=> 'email|max:255',
+            'studentphone' => 'max:10',
+            'studentmajor' => 'required',
+            'studentavatar'=> 'required|mimes:aac,ai,aiff,avi,bmp,c,cpp,csv,dat,dmg,doc,dotx,dwg,dxf,eps,exe,glv,gif,h,hpp,ics,iso,java,mp4,mid,mp4,txt,xlx,xls,pdf,jpg,png,php,css,html,js|max:1024'
+        ];
+    }
 
     public function submit($studentid){
         $validateData = $this->validate();
-        if(!$studentid){
+        if($studentid){
             $updateArray = array(
                 'studentname' => $validateData['studentname'],
                 'studentnumber'=> $validateData['studentnumber'],
@@ -35,7 +42,7 @@ class DashBoard extends Component
                 'studentmajor'=> $validateData['studentmajor'],
                 'studentavatar'=> $validateData['studentavatar'],
             );
-            DB::table('student')->where('studentid', $studentid)->update($updateArray);
+            DB::table('student')->where('id', $studentid)->update($updateArray);
         }
         else{
             StudentProfile::create($validateData);
@@ -43,63 +50,49 @@ class DashBoard extends Component
         StudentProfile::create($validateData);
         session()->flash("success","Form is submitted");
     }
-    public function addForm(){
-        $this->studentname = '';
-        $this->studentnumber = '';
-        $this->studentaddress = '';
-        $this->studentemail = '';
-        $this->studentphone = '';
-        $this->studentmajor = '';
-        $this->studentavatar = '';
-    }
     public function deleteForm(StudentProfile $student){
         //DB::table('student')->where('studentid', $studentid)->delete($studentid);
         $student->delete();
         session()->flash('success','student is deleted');
         return $this->redirect('/dashboard', navigate:true);
     }
-    public function editForm(StudentProfile $studentid){
-        $singData = StudentProfile::find($studentid);
-        $this->studentname = $singData->studentname;
-        $this->studentnumber = $singData->studentnumber;
-        $this->studentaddress = $singData->studentaddress;
-        $this->studentemail = $singData->studentemail;
-        $this->studentphone = $singData->studentphone;
-        $this->studentmajor = $singData->studentmajor;
-        $this->studentavatar = $singData->studentavatar;
-        if(!$singData){
-            StudentProfile::updated([
-                'studentname' => $this->studentname,
-                'studentnumber' => $this->studentnumber,
-                'studentaddress' => $this->studentaddress,
-                'studentemail' => $this->studentemail,
-                'studentphone' => $this->studentphone,
-                'studentmajor' => $this->studentmajor,
-                'studentavatar' => $this->studentavatar
-            ]);
-        }
-        session()->flash('message', 'updated sucessfully!');
-    }
-    public function updateProfile (){
-        // $this->isEdit = True;
-        // $this->dispatchBrowserEvent('edit-profile');
-        $validated =$this->validate([
-            'studentname' => 'required|max:255',
-            'studentnumber' => 'required|max:255',
-            'studentaddress' => 'required|max:255',
-            'studentemail' => 'required|email|max:255',
-            'studentphone' => 'required|max:10',
-            'studentmajor' => 'required|max:50',
-            'studentavatar' => 'required|mimes:aac,ai,aiff,avi,bmp,c,cpp,csv,dat,dmg,doc,dotx,dwg,dxf,eps,exe,glv,gif,h,hpp,ics,iso,java,mp4,mid,mp4,txt,xlx,xls,pdf,jpg,png,php,css,html,js|max:1024',
+    public function updateForm(){
+        $validatedData = $this->validate();
+        StudentProfile::where('id', $this->studentid)->update([
+            'studentname'=> $validatedData['studentname'],
+            'studentnumber'=> $validatedData['studentnumber'],
+            'studentaddress'=> $validatedData['studentaddress'],
+            'studentphone'=> $validatedData['studentphone'],
+            'studentemail'=> $validatedData['studentemail'],
+            'studentmajor'=> $validatedData['studentmajor'],
+            'studentavatar'=> $validatedData['studentavatar'],
         ]);
-        $this->StudentProfile->update($validated);
-        session()->flash('success', 'student profile is updated!');
+        session()->flash('success','your profile is updated!');
+        $this->resetInput();
         return $this->redirect('/dashboard', navigate:true);
     }
-
+    public function editForm (int $studentid){
+        $student = StudentProfile::find($studentid);
+        if($student){
+            $this->studentid = $student->id;
+            $this->studentname = $student->name;
+            $this->studentnumber = $student->number;
+            $this->studentaddress = $student->address;
+            $this->studentphone = $student->phone;
+            $this->studentemail = $student->email;
+            $this->studentmajor = $student->major;
+            $this->studentavatar = $student->avatar;
+            dd($student);
+        }
+        else{
+            return $this->redirect('/dashboard', navigate:true);
+        }
+    }
+    public function close(){
+        $this->resetInput();
+    }
     #[On('edit-mode')]
     public function edit($studentid){
-        dd($studentid);
         $this->editform=true;
     }
     public function render()
